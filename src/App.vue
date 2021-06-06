@@ -2,7 +2,8 @@
   <div>
     <h1>vue3 + vite2</h1>
     <router-link :to="{ path: '/' }">home</router-link> |
-    <router-link :to="{ path: '/mine' }">mine</router-link>
+    <router-link :to="{ path: '/CompositionApi' }">CompositionApi</router-link> |
+    <router-link :to="{ path: '/lifeHooks' }">lifeHooks</router-link>
     <div>
       <router-view />
     </div>

@@ -14,7 +14,7 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const store = useStore()
-    console.log(store.state)
+    // console.log(store.state)
   },
 });
 </script>

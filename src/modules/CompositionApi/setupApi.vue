@@ -1,6 +1,6 @@
 <template>
   <div class="mine">
-    <h1>这是个人页面</h1>
+    
   </div>
 </template>
 
@@ -8,8 +8,16 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'Mine',
-});
+  beforeCreate() {
+    console.log('beforeCreate')
+  },
+  created() {
+    console.log('created')
+  },
+  setup() {
+    console.log('setup')
+  }
+})
 </script>
 
 <style scoped lang="scss">
