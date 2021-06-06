@@ -686,3 +686,95 @@ setup() {
 
 
 
+### 2-4、computed
+
+vue3 中的 computed：
+
+- 传入一个 getter 函数，返回一个**默认不可手动修改的 ref 对象**
+- 传入一个拥有 `get` 和 `set` 函数的对象，创建一个**可手动修改的计算状态**
+
+也就是说，如果 computed 接收的是一个 getter 函数，那么返回的是 ref 对象，并且这个对象不可修改；如果 computed 接收的是一个对象，那么创建的是一个可手动修改的计算状态。
+
+
+
+**getter 函数：**
+
+```js
+<template>
+  <div>
+    <p>【getter函数】全名：{{ getFullName }}</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, reactive } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const people = reactive({
+      first: '张',
+      last: '三'
+    })
+
+    // ---------------- getter 函数
+    const getFullName = computed(() => people.first + people.last)
+    // getFullName.last = '' // getter 函数形式不能修改
+    
+    return {
+      getFullName
+    }
+  }
+})
+</script>
+```
+
+
+
+**get、set 函数对象**
+
+```js
+<template>
+  <div>
+    <p>【对象】全名：{{ getFullName }}</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, reactive } from 'vue'
+
+export default defineComponent({
+  setup() {
+    const people = reactive({
+      first: '张',
+      last: '三'
+    })
+
+    // get、set 函数对象
+    const getName = computed({
+      get() {
+        return people.first + people.last
+      },
+      set(val: string) {
+        people.last = val
+      }
+    })
+
+    setTimeout(() => {
+      getName.value = '五'
+    }, 1000)
+    
+    return {
+      getName
+    }
+  }
+})
+</script>
+
+```
+
+
+
+### 2-5、watch 与 watchEffect
+
+
+

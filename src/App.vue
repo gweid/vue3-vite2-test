@@ -4,6 +4,7 @@
     <router-link :to="{ path: '/' }">home</router-link> |
     <router-link :to="{ path: '/CompositionApi' }">CompositionApi</router-link> |
     <router-link :to="{ path: '/lifeHooks' }">lifeHooks</router-link>
+    <router-link :to="{ path: '/computedApi' }">computedApi</router-link>
     <div>
       <router-view />
     </div>

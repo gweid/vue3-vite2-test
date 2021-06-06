@@ -17,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'lifeHooks',
     component: () => import('@/modules/lifeHooks/index.vue'),
   },
+  {
+    path: '/computedApi',
+    name: 'computedApi',
+    component: () => import('@/modules/computedApi/index.vue'),
+  },
 ];
 
 const router = createRouter({
