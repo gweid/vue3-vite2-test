@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'computedApi',
     component: () => import('@/modules/computedApi/index.vue'),
   },
+  {
+    path: '/watchApi',
+    name: 'watchApi',
+    component: () => import('@/modules/watchApi/index.vue'),
+  },
 ];
 
 const router = createRouter({

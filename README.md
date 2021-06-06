@@ -1,5 +1,9 @@
 # vue3 + vite2 笔记
 
+vue 官方中文网：https://v3.cn.vuejs.org/
+
+vite 官方中文网：https://cn.vitejs.dev/
+
 
 
 ## 1、vite 快速搭建项目
@@ -778,3 +782,163 @@ export default defineComponent({
 
 
 
+#### 2-5-1、watchEffect
+
+立即执行传入的函数，并响应式追踪其依赖，并在**其依赖变更时重新运行该函数**
+
+```js
+const msg = ref('hello')
+
+watchEffect(() => {
+  console.log(msg.value)
+})
+
+setTimeout(() => {
+  msg.value = 'hi'
+}, 1000)
+```
+
+可以发现，控制台一开始会输出 'hello'，隔一秒之后输出 'hi'
+
+![](/imgs/img12.png)
+
+
+
+##### watchEffect 特点
+
+- 不需要手动传入依赖
+
+- 每次初始化时会执行一次回调函数来自动获取依赖
+
+- 无法获取到原值，只能得到变化后的值
+
+
+
+##### 停止监听
+
+当在组件的 setup() 函数或生命周期钩子期间调用 watchEffect 时，监视程序会链接到组件的生命周期，并在卸载组件时自动停止
+
+也可以显式调用返回值以停止侦听
+
+```js
+const stop = watchEffect(() => {
+  /* ... */
+})
+
+stop()
+```
+
+
+
+#### 2-5-2、watch
+
+`watch` 需要侦听特定的数据源，并在回调函数中执行副作用。默认情况下，它是惰性的，只有当被侦听的源发生变化时才执行回调。
+
+watch(source, callback, [options])
+
+- source：可以支持 string,Object,Function,Array; 用于指定要侦听的响应式变量
+- callback：侦听的源发生变化时执行的回调函数
+- options：支持 deep、immediate 和 flush 选项
+
+
+
+##### 侦听单个数据源
+
+可以直接侦测 ref、reactive 对象（仅仅是浅层侦听，需要深层侦听，需要开启 deep）
+
+```js
+// 侦测 ref
+const msg = ref('信息')
+watch(msg, (msg, prevMsg) => {
+  console.log(prevMsg)
+  console.log(msg)
+})
+setTimeout(() => {
+  msg.value = '短信'
+}, 1000)
+
+// 侦测 reactive 对象
+const info = reactive({ name: 'jack' })
+watch(info, (info, prevInfo) => {
+  console.log(prevInfo.name)
+  console.log(info.name)
+})
+setTimeout(() => {
+  info.name = 'mark'
+}, 1000)
+```
+
+
+
+可以侦听返回值 getter 函数，进行 reactive 的某个属性侦听
+
+```js
+const info = reactive({ name: 'jack' })
+watch(() => info.name, (name, prevName) => {
+  console.log(prevName)
+  console.log(name)
+})
+setTimeout(() => {
+  info.name = 'mark'
+}, 1000)
+```
+
+
+
+##### 侦听多个数据源
+
+```js
+const msg = ref('msg-msg')
+const str = ref('str-str')
+
+watch([msg, str], ([msg, str], [prevMsg, prevStr]) => {
+  console.log('多个数据源')
+        
+  console.log(prevMsg, msg)
+  console.log(prevStr, str)
+})
+
+setTimeout(() => {
+  msg.value = 'message'
+  str.value = 'string'
+}, 1000)
+```
+
+
+
+##### deep、immediate 和 flush 选项
+
+deep 选项：对于嵌套对象需要开启深度监听
+
+```js
+const state = reactive({
+  code: 200,
+  data: {
+    name: 'jack'
+  }
+})
+
+watch(() => state.data, (age, prevAge) => {
+  console.log(prevAge, age)
+}, { deep: true })
+
+setTimeout(() => {
+  state.data.name = 'mark'
+}, 1000)
+```
+
+如果不开启 deep: true，直接监听 state.data，修改的是 state.data.name，是不会触发回调函数的
+
+
+
+immediate： 启动的时候立即执行一次
+
+
+
+#### 2-5-3、watch 与 watchEffect 的区别
+
+- watch 是需要传入侦听的数据源，而 watchEffect 是自动收集数据源作为依赖。
+
+- watch 可以访问侦听状态变化前后的值，而 watchEffect 只能访问变化后的值。
+
+- watch 是属性改变的时候执行，而 watchEffect 是默认会执行一次，然后属性改变也会执行。
