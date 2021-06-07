@@ -942,3 +942,126 @@ immediate： 启动的时候立即执行一次
 - watch 可以访问侦听状态变化前后的值，而 watchEffect 只能访问变化后的值。
 
 - watch 是属性改变的时候执行，而 watchEffect 是默认会执行一次，然后属性改变也会执行。
+
+
+
+### 2-6、Teleport 
+
+Teleport：传送组件，类似 react 的 Portals，可以将节点渲染到 `#app` 以外的 Dom。
+
+使用场景：像 `Dialog `,`toast` 等这样的元素，很多情况下，需要将它与 `Vue` 应用的 `DOM` （也就是 `#app` 节点之外）完全剥离，但是又要使用到 `Vue` 组件的状态（`data` 或者 `props`）的值，在 react 中，提供了 Portals；但是在 vue2.x 中要想实现，需要通过第三方库 [portal-vue](https://github.com/LinusBorg/portal-vue) ；而 vue3 中，提供了 Teleport 来解决，可以用`<Teleport>`包裹`Dialog`, 此时就建立了一个传送门，可以将`Dialog`渲染的内容传送到任何指定的地方
+
+
+
+**使用：**
+
+首先，在 index.html 中，创建一个与 `id="app"` 同级的兄弟节点
+
+index.html
+
+```js
+<body>
+  <div id="app"></div>
+  <div id="dialog"></div>
+</body>
+```
+
+然后定义一个 dialog 组件：
+
+```js
+<template>
+  <teleport to="#dialog">
+    <div class="dialog">
+      
+    </div>
+  </teleport>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+
+})
+</script>
+
+<style lang="scss" scoped>
+.dialog {
+  width: 500px;
+  height: 400px;
+  background-color: pink;
+}
+</style>
+```
+
+使用 dialog 组件：
+
+```js
+<template>
+  <div class="teleport-con">
+    <button @click="handleDialog">dialog按钮</button>
+    <dialogCom v-if="dialogShow" />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import dialogCom from './dialogCom.vue'
+
+export default defineComponent({
+  components: {
+    dialogCom
+  },
+  setup() {
+    const dialogShow = ref<boolean>(false)
+    const handleDialog = () => {
+      dialogShow.value = !dialogShow.value
+    }
+
+    return {
+      dialogShow,
+      handleDialog
+    }
+  }
+})
+</script>
+```
+
+
+
+`<Teleport>` 组件包裹需要移动的组件，上面的 to 属性就是要移动到的节点，to：必须是有效的查询选择器或 HTMLElement (如果在浏览器环境中使用)
+
+```js
+<!-- 正确 -->
+<teleport to="#some-id" />
+<teleport to=".some-class" />
+<teleport to="[data-teleport]" />
+
+<!-- 错误 -->
+<teleport to="h1" />
+<teleport to="some-string" />
+```
+
+
+
+### 2-7、Fragment
+
+在 vue2.x 中，每个组件只能有一个根节点：
+
+```js
+<template>
+  <div>
+    <p></p>
+    <p></p>
+  </div>
+</template>
+```
+
+但是在 vue3 中，可以有多个根节点：
+
+```js
+<template>
+  <div></div>
+  <div></div>
+</template>
+```
+

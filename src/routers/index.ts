@@ -27,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'watchApi',
     component: () => import('@/modules/watchApi/index.vue'),
   },
+  {
+    path: '/teleportCom',
+    name: 'teleportCom',
+    component: () => import('@/modules/teleportCom/index.vue'),
+  },
 ];
 
 const router = createRouter({

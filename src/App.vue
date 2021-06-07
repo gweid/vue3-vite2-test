@@ -7,6 +7,7 @@
     <router-link :to="{ path: '/computedApi' }">computedApi</router-link> |
     <router-link :to="{ path: '/computedApi' }">computedApi</router-link> |
     <router-link :to="{ path: '/watchApi' }">watchApi</router-link> |
+    <router-link :to="{ path: '/teleportCom' }">teleportCom</router-link> |
     <div>
       <router-view />
     </div>
